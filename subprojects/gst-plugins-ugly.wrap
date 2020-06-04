@@ -1,5 +1,6 @@
 [wrap-git]
-directory=gst-plugins-ugly
-url=https://gitlab.freedesktop.org/gstreamer/gst-plugins-ugly.git
-push-url=git@gitlab.freedesktop.org:gstreamer/gst-plugins-ugly.git
-revision=master
+directory = gst-plugins-ugly
+url = https://gitlab.freedesktop.org/gstreamer/gst-plugins-ugly.git
+push-url = git@gitlab.freedesktop.org:gstreamer/gst-plugins-ugly.git
+revision = 4063a319c5a7a3ffe23047c378ec19b2b9ed2ef5
+

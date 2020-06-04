@@ -1,5 +1,6 @@
 [wrap-git]
-directory=gst-libav
-url=https://gitlab.freedesktop.org/gstreamer/gst-libav.git
-push-url=git@gitlab.freedesktop.org:gstreamer/gst-libav.git
-revision=master
+directory = gst-libav
+url = https://gitlab.freedesktop.org/gstreamer/gst-libav.git
+push-url = git@gitlab.freedesktop.org:gstreamer/gst-libav.git
+revision = a5850215babe4359a032fcb7d2e614a6209fa1f6
+

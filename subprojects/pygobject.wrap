@@ -1,5 +1,6 @@
 [wrap-git]
-directory=pygobject
-url=https://gitlab.gnome.org/GNOME/pygobject.git
-push-url=git@gitlab.gnome.org:GNOME/pygobject.git
-revision=master
+directory = pygobject
+url = https://gitlab.gnome.org/GNOME/pygobject.git
+push-url = git@gitlab.gnome.org:GNOME/pygobject.git
+revision = 69f2cd516a41e719de37ce8939b59f45c4ff578a
+

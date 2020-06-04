@@ -1,5 +1,6 @@
 [wrap-git]
-directory=x264
-url=https://gitlab.freedesktop.org/gstreamer/meson-ports/x264.git
-push-url=git@gitlab.freedesktop.org:gstreamer/meson-ports/x264.git
-revision=157.2945-meson
+directory = x264
+url = https://gitlab.freedesktop.org/gstreamer/meson-ports/x264.git
+push-url = git@gitlab.freedesktop.org:gstreamer/meson-ports/x264.git
+revision = fde1390d8891ca34d46b4c2c453cab3d15f45faa
+

@@ -1,5 +1,6 @@
 [wrap-git]
-directory=glib
-url=https://gitlab.gnome.org/GNOME/glib.git
-push-url=git@gitlab.gnome.org:GNOME/glib.git
-revision=glib-2-62
+directory = glib
+url = https://gitlab.gnome.org/GNOME/glib.git
+push-url = git@gitlab.gnome.org:GNOME/glib.git
+revision = 6e70c1f20d82eb62a120a4037ae02bd7ba45952e
+

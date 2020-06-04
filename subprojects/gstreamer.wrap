@@ -1,5 +1,6 @@
 [wrap-git]
-directory=gstreamer
-url=https://gitlab.freedesktop.org/gstreamer/gstreamer.git
-push-url=git@gitlab.freedesktop.org:gstreamer/gstreamer.git
-revision=master
+directory = gstreamer
+url = https://gitlab.freedesktop.org/gstreamer/gstreamer.git
+push-url = git@gitlab.freedesktop.org:gstreamer/gstreamer.git
+revision = c8cb34283344ea4160739ec968a0144fed6b311a
+

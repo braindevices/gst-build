@@ -1,4 +1,5 @@
 [wrap-git]
-directory=zlib
-url=https://github.com/centricular/zlib.git
-revision=meson
+directory = zlib
+url = https://github.com/centricular/zlib.git
+revision = 31206a76fe43a90e762b4685428fca83903f0c0a
+
