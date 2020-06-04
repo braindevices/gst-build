@@ -62,5 +62,7 @@ subprojects/libxml2-*
 subprojects/sqlite-*
 subprojects/libdrm-*
 subprojects/openjpeg*
+subprojects/libmicrodns
+subprojects/libpsl
 prefix/
 pygobject
