@@ -2,4 +2,5 @@
 directory=x264
 url=https://gitlab.freedesktop.org/gstreamer/meson-ports/x264.git
 push-url=git@gitlab.freedesktop.org:gstreamer/meson-ports/x264.git
-revision=160.3011-meson
+revision=c0a1c7410358c657601574dfa5d045c7a52eb986
+

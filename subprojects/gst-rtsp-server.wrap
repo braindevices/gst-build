@@ -2,4 +2,5 @@
 directory=gst-rtsp-server
 url=https://gitlab.freedesktop.org/gstreamer/gst-rtsp-server.git
 push-url=git@gitlab.freedesktop.org:gstreamer/gst-rtsp-server.git
-revision=1.17.90
+revision=45140b92fed6539df5c1cd49af9a17cc53930bd7
+

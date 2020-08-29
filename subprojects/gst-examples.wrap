@@ -2,4 +2,5 @@
 directory=gst-examples
 url=https://gitlab.freedesktop.org/gstreamer/gst-examples.git
 push-url=git@gitlab.freedesktop.org:gstreamer/gst-examples.git
-revision=1.17.90
+revision=3896fe7d68305b3190a0020f469c7000b327c223
+

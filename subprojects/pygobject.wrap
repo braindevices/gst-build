@@ -2,4 +2,5 @@
 directory=pygobject
 url=https://gitlab.gnome.org/GNOME/pygobject.git
 push-url=git@gitlab.gnome.org:GNOME/pygobject.git
-revision=master
+revision=7d5f4cd41ee0221c13842ab6323b7a016df02c7e
+

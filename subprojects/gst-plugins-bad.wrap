@@ -2,4 +2,5 @@
 directory=gst-plugins-bad
 url=https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad.git
 push-url=git@gitlab.freedesktop.org:gstreamer/gst-plugins-bad.git
-revision=1.17.90
+revision=feb94549d32d85859546d0696f9e625712fba7f6
+

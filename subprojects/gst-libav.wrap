@@ -2,4 +2,5 @@
 directory=gst-libav
 url=https://gitlab.freedesktop.org/gstreamer/gst-libav.git
 push-url=git@gitlab.freedesktop.org:gstreamer/gst-libav.git
-revision=1.17.90
+revision=441e4b9407098e9a24391f37eba93c1e14568433
+

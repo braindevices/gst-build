@@ -2,4 +2,5 @@
 directory=gst-plugins-ugly
 url=https://gitlab.freedesktop.org/gstreamer/gst-plugins-ugly.git
 push-url=git@gitlab.freedesktop.org:gstreamer/gst-plugins-ugly.git
-revision=1.17.90
+revision=ebb27f429cc86ae52e1c38712962f81326c9a793
+

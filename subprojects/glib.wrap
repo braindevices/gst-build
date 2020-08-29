@@ -2,4 +2,5 @@
 directory=glib
 url=https://gitlab.gnome.org/GNOME/glib.git
 push-url=git@gitlab.gnome.org:GNOME/glib.git
-revision=glib-2-62
+revision=5e954434a3e6a1ca1a96322c5cf5ce436eb2cd12
+
