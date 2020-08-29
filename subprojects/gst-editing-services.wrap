@@ -1,6 +1,6 @@
 [wrap-git]
-directory = gst-editing-services
-url = https://gitlab.freedesktop.org/gstreamer/gst-editing-services.git
-push-url = git@gitlab.freedesktop.org:gstreamer/gst-editing-services.git
-revision = d56f3fe9ece2cbb5dc830f55e2fab6a41f62ca80
+directory=gst-editing-services
+url=https://gitlab.freedesktop.org/gstreamer/gst-editing-services.git
+push-url=git@gitlab.freedesktop.org:gstreamer/gst-editing-services.git
+revision=38e6ca1b3c899e130cb281a7524034db928bf160
 

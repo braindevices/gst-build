@@ -1,5 +1,5 @@
 [wrap-git]
-directory = libnice
-url = https://gitlab.freedesktop.org/libnice/libnice.git
-revision = b67df5899333cbf91b0a8ba4d2aa8ad81ad4fddc
+directory=libnice
+url=https://gitlab.freedesktop.org/libnice/libnice.git
+revision=833c1aa4cc442f2e25216dc411651a674d36c09a
 

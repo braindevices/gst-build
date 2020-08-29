@@ -1,6 +1,6 @@
 [wrap-git]
-directory = FFmpeg
-url = https://gitlab.freedesktop.org/gstreamer/meson-ports/ffmpeg.git
-push-url = git@gitlab.freedesktop.org:gstreamer/meson-ports/ffmpeg.git
-revision = 5da8bab7d28e41e2ae5bbb3ef7bc8f289a6dd692
+directory=FFmpeg
+url=https://gitlab.freedesktop.org/gstreamer/meson-ports/ffmpeg.git
+push-url=git@gitlab.freedesktop.org:gstreamer/meson-ports/ffmpeg.git
+revision=fa5ad7012def874b4e19dab7e9129e10d75538dd
 

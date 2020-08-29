@@ -1,6 +1,6 @@
 [wrap-git]
-directory = gstreamer-vaapi
-url = https://gitlab.freedesktop.org/gstreamer/gstreamer-vaapi.git
-push-url = git@gitlab.freedesktop.org:gstreamer/gstreamer-vaapi.git
-revision = e41c6bd29895156cfdc4c36bd23826e9e3ac8a67
+directory=gstreamer-vaapi
+url=https://gitlab.freedesktop.org/gstreamer/gstreamer-vaapi.git
+push-url=git@gitlab.freedesktop.org:gstreamer/gstreamer-vaapi.git
+revision=876c8da6dafa133684add37fdf4293eca9f127e3
 

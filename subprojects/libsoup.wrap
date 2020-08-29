@@ -1,5 +1,5 @@
 [wrap-git]
-directory = libsoup
-url = https://gitlab.gnome.org/gnome/libsoup.git
-revision = 3857ea93dd3775d68010efed7ad3245714fee379
+directory=libsoup
+url=https://gitlab.gnome.org/gnome/libsoup.git
+revision=8bb37200c0c07ec7d5a689171d9959c486614488
 

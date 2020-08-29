@@ -1,6 +1,6 @@
 [wrap-git]
-directory = gst-omx
-url = https://gitlab.freedesktop.org/gstreamer/gst-omx.git
-push-url = git@gitlab.freedesktop.org:gstreamer/gst-omx.git
-revision = fbdcf190eacc9528ad3591630ba6fceb4ec8a166
+directory=gst-omx
+url=https://gitlab.freedesktop.org/gstreamer/gst-omx.git
+push-url=git@gitlab.freedesktop.org:gstreamer/gst-omx.git
+revision=f7827f68f0a14db39c2491adb57dc4ea4396f83a
 

@@ -1,6 +1,6 @@
 [wrap-git]
-directory = gst-examples
-url = https://gitlab.freedesktop.org/gstreamer/gst-examples.git
-push-url = git@gitlab.freedesktop.org:gstreamer/gst-examples.git
-revision = 219415dbf651002d68c217ae2cec06f808c5235b
+directory=gst-examples
+url=https://gitlab.freedesktop.org/gstreamer/gst-examples.git
+push-url=git@gitlab.freedesktop.org:gstreamer/gst-examples.git
+revision=3896fe7d68305b3190a0020f469c7000b327c223
 

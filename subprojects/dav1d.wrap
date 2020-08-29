@@ -1,6 +1,6 @@
 [wrap-git]
-directory = dav1d
-url = https://code.videolan.org/videolan/dav1d.git
-push-url = git@code.videolan.org:videolan/dav1d.git
-revision = 5b47a7d3c4b67d7d7daf5fd51a271ae261bdceed
+directory=dav1d
+url=https://code.videolan.org/videolan/dav1d.git
+push-url=git@code.videolan.org:videolan/dav1d.git
+revision=5b47a7d3c4b67d7d7daf5fd51a271ae261bdceed
 

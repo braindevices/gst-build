@@ -1,6 +1,6 @@
 [wrap-git]
-directory = libffi
-url = https://gitlab.freedesktop.org/gstreamer/meson-ports/libffi.git
-push-url = git@gitlab.freedesktop.org:gstreamer/meson-ports/libffi.git
-revision = 2103c3181183a80287e85671b957f69c012d9a28
+directory=libffi
+url=https://gitlab.freedesktop.org/gstreamer/meson-ports/libffi.git
+push-url=git@gitlab.freedesktop.org:gstreamer/meson-ports/libffi.git
+revision=2103c3181183a80287e85671b957f69c012d9a28
 

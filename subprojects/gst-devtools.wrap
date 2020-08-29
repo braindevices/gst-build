@@ -1,6 +1,6 @@
 [wrap-git]
-directory = gst-devtools
-url = https://gitlab.freedesktop.org/gstreamer/gst-devtools.git
-push-url = git@gitlab.freedesktop.org:gstreamer/gst-devtools.git
-revision = 124153fe065e3af3697b69435a66e93eb702d3d6
+directory=gst-devtools
+url=https://gitlab.freedesktop.org/gstreamer/gst-devtools.git
+push-url=git@gitlab.freedesktop.org:gstreamer/gst-devtools.git
+revision=e162d054187e9d0927fd8d15322981021751dc96
 

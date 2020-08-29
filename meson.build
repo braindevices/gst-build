@@ -1,6 +1,6 @@
 project('All GStreamer modules', 'c',
-  version : '1.17.0.1',
-  meson_version : '>= 0.48.0',
+  version : '1.17.90',
+  meson_version : '>= 0.52.0',
   default_options : ['buildtype=debugoptimized'])
 
 gst_version = '>= @0@'.format(meson.project_version())
@@ -55,24 +55,24 @@ endif
 
 # Ordered list of subprojects (dict has no ordering guarantees)
 subprojects = [
-  ['gstreamer', {'build-hotdoc': true, 'has-plugins': true}],
-  ['gst-plugins-base', {'build-hotdoc': true, 'has-plugins': true}],
-  ['gst-plugins-good', {'build-hotdoc': true, 'has-plugins': true}],
+  ['gstreamer', {'build-hotdoc': true}],
+  ['gst-plugins-base', {'build-hotdoc': true}],
+  ['gst-plugins-good', {'build-hotdoc': true}],
   ['libnice', { 'option': get_option('libnice'), 'match_gst_version': false}],
-  ['gst-plugins-bad', { 'option': get_option('bad'), 'build-hotdoc': true, 'has-plugins': true}],
-  ['gst-plugins-ugly', { 'option': get_option('ugly'), 'build-hotdoc': true, 'has-plugins': true}],
-  ['gst-libav', { 'option': get_option('libav'), 'build-hotdoc': true, 'has-plugins': true}],
-  ['gst-rtsp-server', { 'option': get_option('rtsp_server'), 'build-hotdoc': true , 'has-plugins': true}],
+  ['gst-plugins-bad', { 'option': get_option('bad'), 'build-hotdoc': true}],
+  ['gst-plugins-ugly', { 'option': get_option('ugly'), 'build-hotdoc': true}],
+  ['gst-libav', { 'option': get_option('libav'), 'build-hotdoc': true}],
+  ['gst-rtsp-server', { 'option': get_option('rtsp_server'), 'build-hotdoc': true}],
   ['gst-devtools', { 'option': get_option('devtools'), 'build-hotdoc': true }],
   ['gst-integration-testsuites', { 'option': get_option('devtools') }],
-  ['gst-editing-services', { 'option': get_option('ges'), 'build-hotdoc': true, 'has-plugins': true}],
-  ['gstreamer-vaapi', { 'option': get_option('vaapi'), 'build-hotdoc': true, 'has-plugins': true}],
-  ['gst-omx', { 'option': get_option('omx'), 'build-hotdoc': true, 'has-plugins': true}],
+  ['gst-editing-services', { 'option': get_option('ges'), 'build-hotdoc': true}],
+  ['gstreamer-vaapi', { 'option': get_option('vaapi'), 'build-hotdoc': true}],
+  ['gst-omx', { 'option': get_option('omx'), 'build-hotdoc': true}],
   ['gstreamer-sharp', { 'option': get_option('sharp') }],
   ['pygobject', { 'option': get_option('python'), 'match_gst_version': false }],
-  ['gst-python', { 'option': get_option('python'), 'has-plugins': true}],
+  ['gst-python', { 'option': get_option('python')}],
   ['gst-examples', { 'option': get_option('gst-examples'), 'match_gst_versions': false}],
-  ['gst-plugins-rs', { 'option': get_option('rs'), 'has-plugins': true, 'match_gst_version': false}],
+  ['gst-plugins-rs', { 'option': get_option('rs'), 'match_gst_version': false}],
 ]
 
 symlink = '''
@@ -87,10 +87,11 @@ if build_system == 'windows'
   subproject('win-nasm')
 endif
 
-subproject('orc', required: get_option('orc'))
+orc_subproject = subproject('orc', required: get_option('orc'))
 
 subprojects_names = []
 plugins_doc_caches = []
+orc_update_targets = []
 all_plugins = []
 foreach sp : subprojects
   project_name = sp[0]
@@ -105,15 +106,10 @@ foreach sp : subprojects
   endif
 
   if subproj.found()
-    # Replace by using subproject.get_variable('plugins', [])
-    # when https://github.com/mesonbuild/meson/pull/5426/files
-    # is merged and released
-    if build_infos.get('has-plugins', false)
-      plugins = subproj.get_variable('plugins')
-    else
-      plugins = []
-    endif
+    plugins = subproj.get_variable('plugins', [])
     all_plugins += plugins
+
+    orc_update_targets += subproj.get_variable('orc_update_targets', [])
 
     subprojects_names += [project_name]
     cmdres = run_command(python3, '-c', symlink.format(project_name, meson.current_source_dir()))
@@ -132,6 +128,13 @@ foreach sp : subprojects
     endif
   endif
 endforeach
+
+# Check if we need to also build glib-networking for TLS modules
+glib_dep = dependency('glib-2.0')
+if glib_dep.type_name() == 'internal'
+  subproject('glib-networking', required : get_option('tls'),
+             default_options: ['gnutls=auto', 'openssl=auto'])
+endif
 
 plugins_doc_dep = custom_target('plugins-doc-cache',
   command: [python3, '-c', 'print("Built all doc caches")'],
@@ -184,7 +187,7 @@ configure_file(
 )
 
 if documented_projects != ''
-  subproject('gst-docs')
+  subproject('gst-docs', required: get_option('doc').enabled())
   message('Gst docs subprojects: ' + documented_projects)
 endif
 
@@ -250,6 +253,14 @@ if get_option('default_library') == 'static'
   )
   install_headers('gstinitstaticplugins.h', subdir : 'gstreamer-1.0/gst')
 
+  # Avoid a x264 link issue described here: https://gitlab.freedesktop.org/gstreamer/gst-build/-/issues/108
+  # Similar issue has been found with VLC: https://mailman.videolan.org/pipermail/vlc-devel/2009-March/057640.html
+  gstfull_link_args = []
+  if cc.has_link_argument('-Wl,-Bsymbolic')
+    gstfull_link_args += ['-Wl,-Bsymbolic']
+  endif
+
+
   gst_dep = subproject('gstreamer').get_variable('gst_dep')
 
   # Get a list of libraries that needs to be exposed in the ABI.
@@ -276,6 +287,7 @@ if get_option('default_library') == 'static'
   gstfull = both_libraries('gstreamer-full-1.0',
     init_static_plugins_c,
     link_with : all_plugins,
+    link_args: gstfull_link_args,
     link_whole : exposed_libs,
     dependencies : gst_dep,
     install : true,
@@ -308,3 +320,7 @@ update = find_program('git-update')
 run_target('git-update', command : [update])
 run_target('update', command : [update,
     '--builddir=@0@'.format(meson.current_build_dir())])
+
+if orc_subproject.found() and orc_update_targets.length() > 0
+  alias_target('update-orc-dist', orc_update_targets)
+endif

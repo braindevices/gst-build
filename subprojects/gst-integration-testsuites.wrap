@@ -1,6 +1,6 @@
 [wrap-git]
-directory = gst-integration-testsuites
-url = https://gitlab.freedesktop.org/gstreamer/gst-integration-testsuites.git
-push-url = git@gitlab.freedesktop.org:gstreamer/gst-integration-testsuites.git
-revision = 80f1e182bdeafe9034227a8306818f01291296e0
+directory=gst-integration-testsuites
+url=https://gitlab.freedesktop.org/gstreamer/gst-integration-testsuites.git
+push-url=git@gitlab.freedesktop.org:gstreamer/gst-integration-testsuites.git
+revision=3b01a24ba347af72138b2604cc4da8d63b0fe28c
 

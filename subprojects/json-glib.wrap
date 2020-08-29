@@ -1,5 +1,5 @@
 [wrap-git]
-directory = json-glib
-url = https://gitlab.gnome.org/GNOME/json-glib.git
-revision = 0a562b86894f1244b4dac573c72b000ea38bcc75
+directory=json-glib
+url=https://gitlab.gnome.org/GNOME/json-glib.git
+revision=712c420cdc52df88810f5edeffa66e025528252c
 

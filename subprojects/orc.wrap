@@ -1,6 +1,6 @@
 [wrap-git]
-directory = orc
-url = https://gitlab.freedesktop.org/gstreamer/orc.git
-push-url = git@gitlab.freedesktop.org:gstreamer/orc.git
-revision = 3d3889025bdbd9ca54565edfb3936c5a29316cff
+directory=orc
+url=https://gitlab.freedesktop.org/gstreamer/orc.git
+push-url=git@gitlab.freedesktop.org:gstreamer/orc.git
+revision=b205bc2fc6cc193e1f21a6d81d10391283fca42f
 

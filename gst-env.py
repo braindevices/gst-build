@@ -15,7 +15,8 @@ import sys
 import tempfile
 import pathlib
 import signal
-from pathlib import PurePath
+from functools import lru_cache
+from pathlib import PurePath, Path
 
 from distutils.sysconfig import get_python_lib
 from distutils.util import strtobool
@@ -72,28 +73,72 @@ def prepend_env_var(env, var, value, sysroot):
     env[var] = val + env_val
     env[var] = env[var].replace(os.pathsep + os.pathsep, os.pathsep).strip(os.pathsep)
 
+def get_target_install_filename(target, filename):
+    '''
+    Checks whether this file is one of the files installed by the target
+    '''
+    basename = os.path.basename(filename)
+    for install_filename in listify(target['install_filename']):
+        if install_filename.endswith(basename):
+            return install_filename
+    return None
+
+def get_pkgconfig_variable_from_pcfile(pcfile, varname):
+    variables = {}
+    substre = re.compile('\$\{[^${}]+\}')
+    with open(pcfile, 'r', encoding='utf-8') as f:
+        for line in f:
+            if '=' not in line:
+                continue
+            key, value = line[:-1].split('=', 1)
+            subst = {}
+            for each in substre.findall(value):
+                substkey = each[2:-1]
+                subst[each] = variables.get(substkey, '')
+            for k, v in subst.items():
+                value = value.replace(k, v)
+            variables[key] = value
+    return variables.get(varname, '')
+
+@lru_cache()
+def get_pkgconfig_variable(builddir, pcname, varname):
+    '''
+    Parsing isn't perfect, but it's good enough.
+    '''
+    pcfile = Path(builddir) / 'meson-private' / (pcname + '.pc')
+    if pcfile.is_file():
+        return get_pkgconfig_variable_from_pcfile(pcfile, varname)
+    return subprocess.check_output(['pkg-config', pcname, '--variable=' + varname],
+                                   universal_newlines=True, encoding='utf-8')
+
+
+def is_gio_module(target, filename, builddir):
+    if target['type'] != 'shared module':
+        return False
+    install_filename = get_target_install_filename(target, filename)
+    if not install_filename:
+        return False
+    giomoduledir = PurePath(get_pkgconfig_variable(builddir, 'gio-2.0', 'giomoduledir'))
+    fpath = PurePath(install_filename)
+    if fpath.parent != giomoduledir:
+        return False
+    return True
+
 def is_library_target_and_not_plugin(target, filename):
     '''
     Don't add plugins to PATH/LD_LIBRARY_PATH because:
     1. We don't need to
     2. It causes us to exceed the PATH length limit on Windows and Wine
     '''
-    if not target['type'].startswith('shared'):
-        return False
-    if not target['installed']:
+    if target['type'] != 'shared library':
         return False
     # Check if this output of that target is a shared library
     if not SHAREDLIB_REG.search(filename):
         return False
     # Check if it's installed to the gstreamer plugin location
-    for install_filename in listify(target['install_filename']):
-        if install_filename.endswith(os.path.basename(filename)):
-            break
-    else:
-        # None of the installed files in the target correspond to the built
-        # filename, so skip
+    install_filename = get_target_install_filename(target, filename)
+    if not install_filename:
         return False
-
     global GSTPLUGIN_FILEPATH_REG
     if GSTPLUGIN_FILEPATH_REG is None:
         GSTPLUGIN_FILEPATH_REG = re.compile(GSTPLUGIN_FILEPATH_REG_TEMPLATE)
@@ -104,15 +149,9 @@ def is_library_target_and_not_plugin(target, filename):
 def is_binary_target_and_in_path(target, filename, bindir):
     if target['type'] != 'executable':
         return False
-    if not target['installed']:
-        return False
     # Check if this file installed by this target is installed to bindir
-    for install_filename in listify(target['install_filename']):
-        if install_filename.endswith(os.path.basename(filename)):
-            break
-    else:
-        # None of the installed files in the target correspond to the built
-        # filename, so skip
+    install_filename = get_target_install_filename(target, filename)
+    if not install_filename:
         return False
     fpath = PurePath(install_filename)
     if fpath.parent != bindir:
@@ -144,7 +183,7 @@ def setup_gdb(options):
     if not shutil.which('gdb'):
         return python_paths
 
-    bdir = os.path.realpath(options.builddir)
+    bdir = pathlib.Path(options.builddir).resolve()
     for libpath, gdb_path in [
             (os.path.join("subprojects", "gstreamer", "gst"),
              os.path.join("subprojects", "gstreamer", "libs", "gst", "helpers")),
@@ -154,17 +193,20 @@ def setup_gdb(options):
         if not gdb_path:
             gdb_path = libpath
 
-        autoload_path = os.path.join(bdir, "gdb-auto-load/", bdir[1:], libpath)
-        os.makedirs(autoload_path, exist_ok=True)
-        for gdb_helper in glob.glob(os.path.join(bdir, gdb_path, "*-gdb.py")):
-            python_paths.add(os.path.join(bdir, gdb_path))
+        autoload_path = (pathlib.Path(bdir) / 'gdb-auto-load').joinpath(*bdir.parts[1:]) / libpath
+        autoload_path.mkdir(parents=True, exist_ok=True)
+        for gdb_helper in glob.glob(str(bdir / gdb_path / "*-gdb.py")):
+            python_paths.add(str(bdir / gdb_path))
             python_paths.add(os.path.join(options.srcdir, gdb_path))
             try:
-                os.symlink(gdb_helper, os.path.join(autoload_path, os.path.basename(gdb_helper)))
-            except FileExistsError:
+                if os.name == 'nt':
+                    shutil.copy(gdb_helper, str(autoload_path / os.path.basename(gdb_helper)))
+                else:
+                    os.symlink(gdb_helper, str(autoload_path / os.path.basename(gdb_helper)))
+            except (FileExistsError, shutil.SameFileError):
                 pass
 
-    gdbinit_line = 'add-auto-load-scripts-directory %s' % os.path.join(bdir, 'gdb-auto-load\n')
+    gdbinit_line = 'add-auto-load-scripts-directory {}\n'.format(bdir / 'gdb-auto-load')
     try:
         with open(os.path.join(options.srcdir, '.gdbinit'), 'r') as f:
             if gdbinit_line in f.readlines():
@@ -279,6 +321,8 @@ def get_subprocess_env(options, gst_version):
 
     for target in targets:
         filenames = listify(target['filename'])
+        if not target['installed']:
+            continue
         for filename in filenames:
             root = os.path.dirname(filename)
             if srcdir_path / "subprojects/gst-devtools/validate/plugins" in (srcdir_path / root).parents:
@@ -295,17 +339,22 @@ def get_subprocess_env(options, gst_version):
                                 options.sysroot)
             elif is_binary_target_and_in_path(target, filename, bindir):
                 paths.add(os.path.join(options.builddir, root))
+            elif is_gio_module(target, filename, options.builddir):
+                prepend_env_var(env, 'GIO_EXTRA_MODULES',
+                                os.path.join(options.builddir, root),
+                                options.sysroot)
 
     with open(os.path.join(options.builddir, 'GstPluginsPath.json')) as f:
         for plugin_path in json.load(f):
             prepend_env_var(env, 'GST_PLUGIN_PATH', plugin_path,
                             options.sysroot)
 
-    for p in paths:
+    # Sort to iterate in a consistent order (`set`s and `hash`es are randomized)
+    for p in sorted(paths):
         prepend_env_var(env, 'PATH', p, options.sysroot)
 
     if os.name != 'nt':
-        for p in mono_paths:
+        for p in sorted(mono_paths):
             prepend_env_var(env, "MONO_PATH", p, options.sysroot)
 
     presets = set()
@@ -349,16 +398,21 @@ def get_subprocess_env(options, gst_version):
                 prepend_env_var(env, 'GST_OMX_CONFIG_DIR', os.path.dirname(path),
                                 options.sysroot)
 
-        for p in presets:
+        for p in sorted(presets):
             prepend_env_var(env, 'GST_PRESET_PATH', p, options.sysroot)
 
-        for t in encoding_targets:
+        for t in sorted(encoding_targets):
             prepend_env_var(env, 'GST_ENCODING_TARGET_PATH', t, options.sysroot)
 
-        for pkg_dir in pkg_dirs:
+        for pkg_dir in sorted(pkg_dirs):
             prepend_env_var(env, "PKG_CONFIG_PATH", pkg_dir, options.sysroot)
 
-    for python_dir in python_dirs:
+    # Check if meson has generated -uninstalled pkgconfig files
+    meson_uninstalled = pathlib.Path(options.builddir) / 'meson-uninstalled'
+    if meson_uninstalled.is_dir():
+        prepend_env_var(env, 'PKG_CONFIG_PATH', str(meson_uninstalled), options.sysroot)
+
+    for python_dir in sorted(python_dirs):
         prepend_env_var(env, 'PYTHONPATH', python_dir, options.sysroot)
 
     mesonpath = os.path.join(SCRIPTDIR, "meson")

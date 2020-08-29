@@ -20,7 +20,9 @@ You can find [instructions for Windows below](#windows-prerequisites-setup).
 
 ### Install meson and ninja
 
-Meson 0.48 or newer is required.
+Meson 0.52 or newer is required.
+
+For cross-compilation Meson 0.54 or newer is required.
 
 On Linux and macOS you can get meson through your package manager or using:
 
@@ -47,8 +49,8 @@ ninja -C builddir
 This will automatically create the `build` directory and build everything
 inside it.
 
-NOTE: On Windows, you *must* run this from inside the Visual Studio command
-prompt of the appropriate architecture and version.
+NOTE: On Windows, you *must* run this from [inside the Visual Studio command
+prompt](#running-meson-on-windows) of the appropriate architecture and version.
 
 ### External dependencies
 
@@ -319,6 +321,24 @@ Note that Meson is written entirely in Python, so you can also run it as-is
 from the [git repository](https://github.com/mesonbuild/meson/) if you want to
 use the latest master branch for some reason.
 
+**ARM64 native only**: You might need
+[native upstream ARM64 support fix](https://github.com/mesonbuild/meson/pull/7432)
+which is expected to be a part of Meson 0.55.1.
+If your Meson package version which was installed via `pip3` is lower than 0.55.1,
+then you need to use [the latest master branch](https://github.com/mesonbuild/meson/).
+
+### Running Meson on Windows
+
+At present, to build with Visual Studio, you need to run Meson from inside the
+VS 2019 command prompt. Press `Start`, and search for `VS 2019`, and click on
+`x64 Native Tools Command Prompt for VS 2019`, or a prompt named similar to
+that:
+
+![x64 Native Tools Command Prompt for VS 2019](/data/images/vs-2019-dev-prompt.png)
+
+**ARM64 native only**: Since Visual Studio might not install dedicated command
+prompt for native ARM64 build, you might need to run `vcvarsx86_arm64.bat` on CMD.
+Please refer to [this document](https://docs.microsoft.com/en-us/cpp/build/building-on-the-command-line?view=vs-2019#developer_command_file_locations)
 
 ### Setup a mingw/wine based development environment on linux
 
